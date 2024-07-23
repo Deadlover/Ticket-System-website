@@ -1,0 +1,16 @@
+# Django related ignores
+*.pyc
+__pycache__/
+*.sqlite3
+
+# Media files (uploads)
+media/
+
+# Static files
+staticfiles/
+
+# Environment variables
+.env
+
+# IDE files (example for VS Code)
+.vscode/
