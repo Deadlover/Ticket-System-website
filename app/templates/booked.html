@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booked Seat</title>
+    <link href="{% static 'css/output.css' %}" rel="stylesheet">
+</head>
+<body>
+    
+    {% include 'navbar.html' %}
+
+    <div class="mt-12">
+        <table class="shadow m-auto">
+
+            <tr class="hover:bg-green-400"> 
+                <td class="p-4">Seat</td>
+                <td class="p-4">Booked Date</td>
+                <td class="p-4">Price</td>
+                <td class="p-4">Is_paid</td>
+                <td class="p-4">Status</td>
+            </tr>
+            
+            {% for seat in bookedseat %}
+            <tr class="hover:bg-green-400">
+                <td class="p-4">
+                {% for detail in seat.details.all %}
+                    <p>Seat Number: {{ detail.seat.seat_number }}</p>
+                {% endfor %}
+                </td>
+                <td class="p-4">{{seat.booked_date|date:"N:d"}}</td>
+                <td class="p-4">{{seat.total_price}}</td>
+                <td class="p-4">{{seat.is_paid}}</td>
+                <td class="p-4">{{seat.status}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    
+</body>
+</html>

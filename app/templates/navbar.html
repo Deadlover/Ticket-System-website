@@ -1,0 +1,18 @@
+<nav class="flex justify-around bg-violet-500 text-white p-3">
+    <ul class="flex gap-12">
+        <li class="">
+            <a href="{% url 'home' %}" class="group transition duration-300">Home
+                <span
+                    class="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-white"></span>
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'booked' %}" class="group transition duration-300">Booked Ticket
+
+                <span
+                class="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-white"></span>
+            </a>
+        </li>
+    </ul>
+    <p>{{username}}</p>
+</nav>

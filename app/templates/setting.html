@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin</title>
+    <link href="{% static 'css/output.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li>Movie</li>
+            <li>Add Movie</li>
+            <li></li>
+            <li></li>
+        </ul>
+    </nav>
+
+<div class="form cart-space max-sm:text-sm">
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+    
+        <table class="">
+        {% if movie %}
+            {% for field in movie %}
+        <tr>
+            <th>{{ field.label }}</th>
+            <td>{{ field }}</td>
+        </tr>
+        {% endfor %}
+    
+        {% else %}
+            {% for field in screening %}
+            <tr>
+                <th>{{ field.label }}</th>
+                <td>{{ field }}</td>
+            </tr>
+            {% endfor %}
+        {% endif %}
+    
+        </table>
+        <div class="form-btn">
+            <button type="submit">submit</button>
+        </div>
+    </form>
+    </div>
+
+</body>
+
+</html>

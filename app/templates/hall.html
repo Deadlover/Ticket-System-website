@@ -1,0 +1,269 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEAT</title>
+    <link href="{% static 'css/output.css' %}" rel="stylesheet">
+
+    <style>
+        .booked {
+            color: red;
+        }
+
+        .selected {
+            color: green;
+        }
+    </style>
+
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+
+    <div class="bg-black">
+        <p class="text-white text-center">The Current Date is: {{ current_time }}</p>
+    </div>
+
+    <div class="text-2xl text-center my-10">
+        Hall 1
+    </div>
+
+    <div class="flex justify-around mr-12">
+        <div class="flex justify-around bg-gray-800 p-8 rounded-md w-4/5 m-auto text-white">
+            <div>
+                {% for seat in seats %}
+                {% if seat.seat_number in booked_seat %}
+                <p class="seat booked" data-price="{{seat.seat_class.price}}">{{ seat.seat_number }}</p>
+                {% elif seat.seat_number in selectedseat %}
+                <p class="seat selected clicked" data-price="{{seat.seat_class.price}}"
+                    data-seat-number="{{seat.seat_number}}">{{seat.seat_number}}</p>
+                {% else %}
+                <p class="seat clicked" data-price="{{seat.seat_class.price}}" data-seat-number="{{seat.seat_number}}">
+                    {{seat.seat_number}}</p>
+                {% endif %}
+                {% if forloop.counter|divisibleby:10 and not forloop.last %}
+            </div>
+            <div class="row"> <!-- Close the current row and start a new one -->
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="bg-gray-600 rounded-md p-8 text-white flex flex-col justify-between">
+            <p>Seat Selected</p>
+            <div class="seatbook flex flex-col"></div>
+            <div class="w-full">
+                <a href="{% url 'khalti' screening.id %}" onclick="navigateToOrder()"
+                    class="px-4 py-1 border-2 border-violet-400 rounded hover:bg-violet-600 hover:text-white active:bg-violet-800">Book</a>
+            </div>
+        </div>
+    </div>
+    <div class="flex">
+        <ul class=" m-auto flex bg-gray-600 p-2 text-white mt-4">
+            <li class="mr-4 ">
+                <span class="w-4 h-4 inline-block bg-red-500"></span> Booked
+            </li>
+            <li class="mr-4">
+                <span class="w-4 h-4 inline-block bg-white"></span> Available
+            </li>
+            <li class="mr-4">
+                <span class="w-4 h-4 inline-block bg-green-500"></span> Selected
+            </li>
+        </ul>
+    </div>
+
+
+
+    {{name|json_script:"group-name"}}
+    {{hall|json_script:"hall-no"}}
+    {{movie.id|json_script:"movie-no"}}
+
+
+
+    <script>
+        let seat = document.querySelectorAll('.clicked')
+        let price = document.querySelector('[data-price]').getAttribute('data-price')
+        console.log(price)
+        seat.forEach(seat => seat.addEventListener('click', select))
+        let addlive = document.querySelector('.seatbook')
+        seats = []
+
+        function select(e) {
+            let seatNumber = e.target.innerText;
+            const action = this.classList.contains('selected') ? 'deselect' : 'select';
+
+            if (action == 'deselect') {
+                if (seats.includes(seatNumber)) {
+                    console.log("seat found");
+                    ws.send(JSON.stringify({ seat: seatNumber, action: action }));
+                    addNode(seatNumber, action)
+                    const isSelected = false
+                    updateSeatSelection(seatNumber, isSelected);
+                    return
+                }
+                else {
+                    console.log("seat not found");
+                    alert('this seat is selected by another person right now')
+                    return false
+                }
+
+            }
+            else {
+                console.log("seat select");
+                ws.send(JSON.stringify({ seat: seatNumber, action: action }));
+                addNode(seatNumber, action)
+                const isSelected = true;
+                updateSeatSelection(seatNumber, isSelected);
+
+            }
+        }
+
+        function addNode(seatNumber, action) {
+            if (action == 'select') {
+                // Create a new div element
+                const newDiv = document.createElement('div');
+                newDiv.classList.add(seatNumber, 'choosed', 'flex', 'justify-around', 'w-full');
+                newDiv.setAttribute('data-seat', seatNumber);
+
+
+                // Create a paragraph for the data
+                const dataParagraph = document.createElement('p');
+                dataParagraph.classList.add('mr-2');
+                dataParagraph.textContent = seatNumber;
+                newDiv.appendChild(dataParagraph);
+
+                // Create a paragraph for the delete text
+                const deleteParagraph = document.createElement('p');
+                deleteParagraph.textContent = price;
+                newDiv.appendChild(deleteParagraph);
+
+                // Append the new div to the existing div
+                addlive.appendChild(newDiv);
+            }
+            else {
+                let seatDivs = Array.from(document.querySelectorAll('.choosed'));
+                let seatToRemove = seatDivs.find(div => div.classList.contains(seatNumber));
+
+                if (seatToRemove) {
+                    seatToRemove.remove();
+                } else {
+                    console.log("No seat found to remove with seat number:", seatNumber);
+                }
+            }
+        }
+
+        function updateSeatSelection(seatNumber, isSelected) {
+            const seatIndex = seats.indexOf(seatNumber);
+            if (isSelected && seatIndex === -1) {
+                seats.push(seatNumber); // Add seat number if selected
+            } else if (!isSelected && seatIndex !== -1) {
+                seats.splice(seatIndex, 1); // Remove seat number if deselected
+            }
+        }
+
+        // WEBSOCKET
+
+        const groupName = JSON.parse(document.getElementById('group-name').textContent)
+        const id = JSON.parse(document.getElementById('hall-no').textContent)
+
+        var ws = new WebSocket(
+            'ws://'
+            + window.location.host  // this gives 127.0.0.1
+            + '/ws/sc/'
+            + groupName  // appends the groupname in url
+            + '/'
+            + id
+        )
+
+        ws.onopen = function (event) {
+            console.log("websocket conntection open...")
+        }
+
+        ws.onmessage = function (event) {
+            console.log("Message received: ", event.data);
+            const data = JSON.parse(event.data);
+
+
+            if (data.type == 'seat_status') {
+                console.log(data.seat);
+                updateSeatStatus(data.seat, data.status); // 'status' could be 'selected' or 'deselected'
+            }
+            if (data.type === 'seat_clear' && data.status === 'deselected') {
+                data.seats.forEach(seatNumber => {
+                    const seatElement = document.querySelector(`.seat[data-seat-number="${seatNumber}"]`);
+                    if (seatElement) {
+                        seatElement.classList.remove('selected');
+                    }
+                }
+                );
+            }
+
+            if (data.type === 'seat_updated' && data.status === 'booked') {
+                data.seats.forEach(seatNumber => {
+                    const seatElement = document.querySelector(`.seat[data-seat-number="${seatNumber}"]`);
+                    if (seatElement) {
+                        seatElement.classList.remove('selected');
+                        seatElement.classList.add('booked');
+                    }
+                }
+                );
+            }
+        };
+
+        ws.onclose = function (event) {
+            console.log("connection close", event);
+        }
+
+
+        function updateSeatStatus(seatNumber, status) {
+            const seat = Array.from(document.querySelectorAll('.seat')).find(s => s.textContent.trim() === seatNumber);
+            console.log("lll");
+            if (!seat) return;
+
+            if (status === 'selected') {
+                seat.classList.add('selected');
+                seat.classList.remove('clicked');
+
+            } else if (status === 'deselected') {
+                seat.classList.remove('selected');
+                seat.classList.add('clicked');
+            }
+        }
+
+
+        let navigating = true;
+
+        // Call this function when initiating navigation to the order page
+        function navigateToOrder() {
+            navigating = false;
+            // Navigate to the order page
+        }
+
+        window.addEventListener("beforeunload", function (event) {
+            // This event triggers when the window is about to be closed
+            if (navigating) {
+                const movieid = JSON.parse(document.getElementById('movie-no').textContent)
+                url = "/clear/" + id + '/' + movieid + '/' + groupName;
+                // Note: Direct ws.send() won't work if the connection is already closing or closed
+                fetch(url).then(response => {
+                        if (response.ok) {
+                            return response.json(); // Assuming the server response is JSON
+                        }
+                        throw new Error('Network response was not ok.');
+                    })
+                    .then(data => {
+                        console.log(data); // Process the data
+                    })
+                    .catch(error => {
+                        console.error('There has been a problem with your fetch operation:', error);
+                    });
+            }
+        });
+    </script>
+
+</body>
+
+</html>

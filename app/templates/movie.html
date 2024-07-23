@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>movie</title>
+    <link href="{% static 'css/output.css' %}" rel="stylesheet">
+</head>
+<body>
+    
+    {% include 'navbar.html' %} 
+    <div class="flex w-4/5 m-auto mt-20 gap-8">
+
+        <div class="w-1/6 ">
+            <img src="{% static 'image/animal.webp' %}" alt="animal">
+        </div>
+        <div>
+            <div>
+                <h1>{{movie.movie.movie_name}}</h1>
+                
+                <p class="ml-4">{{movie.movie.movie_description}}</p>
+            </div>
+            <table>
+                <tr>
+                    <td class="pr-12 py-2 " >Original Title</td>
+                    <td>{{movie.movie.movie_name}}</td>
+                </tr>
+                <tr>
+                    <td class="pb-2">Release Date</td>
+                    <td>{{movie.movie.movie_name}}</td>
+                </tr>
+                <tr>
+                    <td class="pb-2">Runtime</td>
+                    <td>{{movie.movie.movie_length}} min</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="w-4/5 m-auto mt-8 bg-gray-800 px-12 pb-12 pt-4 rounded-md">
+        <h1 class="text-2xl text-white my-8">Now Showing in Hall {{movie.hall_no}}</h1>
+        <div class="">
+            <a href="{% url 'hall' movie.movie.movie_name movie.hall_no %}" class="text-green-500 hover:bg-black border-2 px-3 py-2 rounded-lg"> {{movie.start_time|date:"h:i a" }}</a>
+        </div>
+    </div>
+
+</body>
+</html>

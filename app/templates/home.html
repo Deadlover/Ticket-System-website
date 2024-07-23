@@ -1,0 +1,34 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>home</title>
+    <link href="{% static 'css/output.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    {% include 'navbar.html' %} 
+    <div>
+        <h1 class="text-center text-2xl mt-4">MOVIE</h1>
+
+        <div class="grid grid-cols-3 w-10/12 m-auto">
+            {% for screening in movies %}
+            <div
+                class="shadow w-2/3 p-4 transistion ease-in-out delay-150 hover:-translate-y-1 hover:scale-110  duration-300">
+                <a href="{% url 'movie' screening.movie.id %}" class="hover:text-violet-800 ">
+                    <img src="{{screening.movie.movie_image.url}}" alt="{{screening.movie.movie_name}}" class="">
+                    <p class="text-xl">
+                        {{screening.movie.movie_name}}
+                    </p>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</body>
+
+</html>
