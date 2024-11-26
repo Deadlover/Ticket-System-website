@@ -13,25 +13,25 @@
     <div class="flex w-4/5 m-auto mt-20 gap-8">
 
         <div class="w-1/6 ">
-            <img src="{% static 'image/animal.webp' %}" alt="animal">
+            <img src="{{movie.movie.movie_image.url}}" alt="animal">
         </div>
         <div>
             <div>
-                <h1>{{movie.movie.movie_name}}</h1>
+                <h1 class="font-semibold text-lg">{{movie.movie.movie_name}}</h1>
                 
                 <p class="ml-4">{{movie.movie.movie_description}}</p>
             </div>
             <table>
                 <tr>
-                    <td class="pr-12 py-2 " >Original Title</td>
+                    <td class="font-semibold pr-12 py-2 " >Original Title</td>
                     <td>{{movie.movie.movie_name}}</td>
                 </tr>
                 <tr>
-                    <td class="pb-2">Release Date</td>
+                    <td class="font-semibold pb-2">Release Date</td>
                     <td>{{movie.movie.movie_name}}</td>
                 </tr>
                 <tr>
-                    <td class="pb-2">Runtime</td>
+                    <td class="font-semibold pb-2">Runtime</td>
                     <td>{{movie.movie.movie_length}} min</td>
                 </tr>
             </table>

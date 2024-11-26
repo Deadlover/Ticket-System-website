@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cinema</title>
+    <title>KBL</title>
     <link href="{% static 'css/output.css' %}" rel="stylesheet">
 </head>
-<body>
+<body class="bg-slate-700">
 <div class="mt-20">
-    <h1 class="text-center text-2xl" >Login</h1>
-    <div class="shadow m-auto flex w-1/2 items-center justify-center ">
-        <form action="{% url 'login' %}" method="post" class="flex flex-col p-20 gap-4">
+    <div class=" m-auto flex flex-col w-1/2 items-center justify-center p-12 ">
+        <form action="{% url 'login' %}" method="post" class="bg-white flex flex-col p-10  gap-4 rounded-lg">
+            <h1 class="text-center text-2xl mb-4" >Login</h1>
             {% csrf_token %} 
             <input type="text" placeholder="Username" name="username" class="px-4 py-2 border-2 border-violet-600" > 
             <input type="password" placeholder="Password" name="password" class="px-4 py-2 border-2 border-violet-600">
@@ -19,6 +19,12 @@
         </form>
     </div>
 </div>
+
+
     
 </body>
 </html>
+
+
+
+
