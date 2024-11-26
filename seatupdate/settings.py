@@ -78,10 +78,15 @@ ASGI_APPLICATION = 'seatupdate.asgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'Tickets',  # Replace with your actual database name
+        'USER': 'love',  # Replace with your PostgreSQL username
+        'PASSWORD': '123456',  # Replace with your PostgreSQL password
+        'HOST': 'localhost',  # Set to the database server address, 'localhost' for local development
+        'PORT': '5432',  # Default port for PostgreSQL
     }
 }
+
 
 
 # Password validation

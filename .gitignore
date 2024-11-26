@@ -14,3 +14,4 @@ staticfiles/
 
 # IDE files (example for VS Code)
 .vscode/
+*.sqlite3
