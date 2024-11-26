@@ -16,7 +16,7 @@ This project is a full-stack ticket booking system that allows users to book tic
 
 ## Tech Stack
 
-**Frontend** React, HTML, CSS, JavaScript, Server-Side Rendering (SSR)
+**Frontend** HTML, CSS, JavaScript, Server-Side Rendering (SSR)
 
 **Backend** Django, Django Channels
 
